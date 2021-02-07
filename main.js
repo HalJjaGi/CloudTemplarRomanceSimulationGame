@@ -1,13 +1,254 @@
-function as () {
-    var request = new XMLHttpRequest();
-    request.open('POST', './script.txt', true);
-    request.send(null);
-    request.onreadystatechange = function () {
-        if (request.readyState === 4 && request.status === 200) {
-            var type = request.getResponseHeader('Content-Type');
-            if (type.indexOf("text") !== 1) {
-                console.log(request.responseText);
-            }
-        }
+//canvas
+const canvas = $("#canvas")[0];
+const ctx = canvas.getContext("2d");
+const canvasBG = $("#canvasBackground")[0];
+const ctxBG = canvasBG.getContext("2d");
+const canvasP = $("#canvasPerson")[0];
+const ctxP = canvasP.getContext("2d");
+//etc
+let nthOfPlace = 0; // json 장소 몇번째
+let nthOfText = 0; // json text 내에서의 몇번째
+let length = 0; //텍스트애니메이션에 사용
+let num = 1; //텍스트애니메이션에 사용
+const textAnimSpeed = 50; //텍스트애니메이션 속도
+let whoIsBefore = ["a", "a"]; //방금전까지 말하고 있던사람, 이사람은 다른사람이 말할때 회색빛, 어둡게? 약간 그렇게 보임
+let whoIsFocus = ["나", "a"];
+let isFirst = true; //첫 실행인지
+let resetOn = false;
+//json
+const mainScript = $("#mainScript");
+const script = JSON.parse(mainScript.html());
+let scriptShortcut = script.script[nthOfPlace].text[nthOfText];
+//textbox
+const textBoxHeight = 350;
+const textWhoStart = [363, 800];
+const textWhoSize = "40";
+const textTextStart = [363, 860];
+const textTextSize = "30";
+const choiceBoxStart = {"up" : [363, 878], "down" : [363, 964]};
+const choiceBoxSize = [1194, 66];
+const choiceTextStart = {"up" : [960, 911], "down" : [960, 997]};
+const choiceTextSize = "30";
+//color
+const defaultBackground = "#D9F9A5";
+const defaultStroke = "#68534D";
+const choiceBox = "#F4FEC1";
+//choice
+let doneChoice = false;
+let choiceNum = 0;
+let reactionNum = 0;
+
+window.onload = function () {
+    const dummyDiv = $(".forFont");
+    dummyDiv.hide();
+    
+
+    let qw = script.script[0].text[0];
+    console.log(qw.who);
+    
+   const start = setInterval(playGame, 1);
+
+   //playGame();
+
+
+
+};
+
+function playGame() {  
+
+    //canvas 초기화
+    ctx.clearRect(0, 0, 1920, 1080);
+    //전체배경
+    drawBackground();
+    //인물 출력
+    drawPerson();
+    //글상자 배경
+    drawTextboxBackground();
+    //텍스트 출력
+    if(scriptShortcut.isChoice) {
+        //선택지 있는 텍스트
+        drawChoice();
+    }
+    else {
+        //선택지 없는 텍스트
+        drawText();
     }
 }
+
+function drawBackground() {
+    let img = new Image();
+    img.src = script.script[nthOfPlace].backgroundPath;
+    img.onload = function () {
+        ctxBG.drawImage(img, 0, 200, 1920, 1080, 0, 0, 1920, 1080);
+    }
+}
+
+function drawTextboxBackground() {
+    ctx.fillStyle = defaultBackground;
+    ctx.fillRect(0, 1080-textBoxHeight, 1920, textBoxHeight);
+    ctx.beginPath();
+    ctx.moveTo(0, 1080-textBoxHeight-1);
+    ctx.lineTo(1920, 1080-textBoxHeight-1);
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = defaultStroke;
+    ctx.stroke();    
+}
+
+function drawChoice() {
+    if(doneChoice) {
+        drawText();
+    }
+    else {
+        //선택지 출력
+        //선택지 박스?버튼? 그리기
+        ctx.fillStyle = choiceBox;
+        ctx.strokeStyle = defaultStroke;
+        ctx.fillRect(choiceBoxStart.up[0], choiceBoxStart.up[1], choiceBoxSize[0], choiceBoxSize[1]);
+        ctx.strokeRect(choiceBoxStart.up[0], choiceBoxStart.up[1], choiceBoxSize[0], choiceBoxSize[1]);
+        ctx.fillRect(choiceBoxStart.down[0], choiceBoxStart.down[1], choiceBoxSize[0], choiceBoxSize[1]);
+        ctx.strokeRect(choiceBoxStart.down[0], choiceBoxStart.down[1], choiceBoxSize[0], choiceBoxSize[1]);
+        //나머지 텍스트
+        ctx.fillStyle = defaultStroke;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.font = textWhoSize + "pt 'paybooc-Bold'";
+        ctx.fillText(scriptShortcut.question, 960, textWhoStart[1]);
+        ctx.font = choiceTextSize + "pt 'paybooc-Medium'";
+        ctx.fillText(scriptShortcut.choice[0], choiceTextStart.up[0], choiceTextStart.up[1]);
+        ctx.font = choiceTextSize + "pt 'paybooc-Medium'";
+        ctx.fillText(scriptShortcut.choice[1], choiceTextStart.down[0], choiceTextStart.down[1]);
+        ctx.textAlign = "start";
+        ctx.textBaseline = "alphabetic";
+    }
+}
+
+function drawText() {
+    //처리하기는 선택지 있는거랑 없는거랑 다 처리하긴 함
+    let name;
+    let result;
+    if(scriptShortcut.isChoice) {
+        //선택문일때
+        console.log("as");
+        try {
+            name = scriptShortcut.reaction[choiceNum][reactionNum].who;
+            result = scriptShortcut.reaction[choiceNum][reactionNum].text.slice(0, num);
+            if(num == 1) {
+                length = scriptShortcut.reaction[choiceNum][reactionNum].text.length;
+            }
+        } catch (error) {
+            console.log(error);
+        }
+    }
+    else {
+        //선택문 아닐때
+        name = scriptShortcut.who;
+        result = scriptShortcut.text.slice(0, num);
+        if(num == 1) {
+            length = scriptShortcut.text.length;
+        }
+    }
+    
+        
+    ctx.fillStyle = defaultStroke;
+    ctx.font = textWhoSize + "pt 'paybooc-Bold'";
+    ctx.fillText(name, textWhoStart[0], textWhoStart[1]);
+    ctx.font = textTextSize + "pt 'paybooc-Bold'";
+    ctx.fillText(result, textTextStart[0], textTextStart[1]);
+    if (num != 1) {
+        let wakeUpTime = Date.now() + textAnimSpeed;
+        while (Date.now() < wakeUpTime) {}
+    }
+    if(num != length) {
+        if(scriptShortcut.isChoice) {
+            reactionNum+=1;
+        }
+        num+=1;
+    }
+}
+
+
+//여기 논리를 싹다 고쳐야 할듯
+
+function drawPerson() {
+
+    if(scriptShortcut.isChoice) {
+
+    }
+    else {
+
+        if (whoIsFocus[0] == scriptShortcut.who) {
+
+        }
+        else {
+            whoIsFocus[1] = whoIsFocus[0];
+            whoIsFocus[0] = scriptShortcut.who;
+        }
+    
+        if(whoIsFocus[0] == whoIsBefore[0] && whoIsFocus[1] == whoIsBefore[1]) {
+        }
+        else {
+            ctxP.clearRect(0, 0, 1920, 1080);
+    
+            if(whoIsFocus[0] == "나") {
+                let img1 = new Image();
+                let img2 = new Image();
+                //아직까지는 사람이 '나'랑 '클템'밖에 없어서 이렇게 처리 했지만 나중에 사람이 늘어나면 바꿔야함
+                //지금 말하는 사람
+                img1.src = "./lib/" + whoIsFocus[0] + ".png";
+                img1.onload = function () {
+                    callback();
+                }
+                function callback() {
+                    ctxP.filter = "brightness(100%)";
+                    ctxP.drawImage(img1, 0, 0, 1920, 1273, 800, 190, 960, 636.5);
+    
+                }
+                //방금 말한 사람
+                if(isFirst) {
+        
+                }
+                else {
+                    img2.src = "./lib/" + whoIsFocus[1] + ".png";
+                    img2.onload = function () {
+                        ctxP.filter = "brightness(100%)";
+                        ctxP.drawImage(img1, 0, 0, 1920, 1273, 800, 190, 960, 636.5);
+                        ctxP.filter = "brightness(50%)";
+                        ctxP.drawImage(img, 0, 0, 1920, 1080, 78, 153, 1024, 576);
+                    }
+                }
+            }
+            else if (whoIsFocus[0] == "클템"){
+                let img1 = new Image();
+                let img2 = new Image();
+                //아직까지는 사람이 '나'랑 '클템'밖에 없어서 이렇게 처리 했지만 나중에 사람이 늘어나면 바꿔야함
+                img1.src = "./lib/" + whoIsFocus[0] + ".png";
+                img1.onload = function () {
+                    ctxP.filter = "none";
+                    ctxP.drawImage(img1, 0, 0, 1920, 1080, 78, 153, 1024, 576);
+                }
+                //방금 말한 사람
+                if(isFirst) {
+                    isFirst = false;
+                    whoIsFocus[1] = "나";
+                }
+                img2.src = "./lib/" + whoIsFocus[1] + ".png";
+                img2.onload = function () {
+                    ctxP.filter = "brightness(50%)";
+                    ctxP.drawImage(img2, 0, 0, 1920, 1273, 800, 190, 960, 636.5);
+                }
+            }
+        }
+        whoIsBefore[0] = whoIsFocus[0];
+        whoIsBefore[1] = whoIsFocus[1];
+    }
+}
+
+document.addEventListener("click", function () {
+    console.log("as");
+    console.log(nthOfText);
+    nthOfText+=1;
+    length = 0;
+    num = 1;
+    scriptShortcut = script.script[nthOfPlace].text[nthOfText]
+}, false);
+//클릭 리스너 만들기

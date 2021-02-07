@@ -2,9 +2,58 @@
 <html lang="ko">
 <head>
     <link rel="stylesheet" href="./style.css">
+    <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 </head>
 <body>
-    <button onclick="as()">asasass</button>
+    <div class="forFont" style="position: absolute; left: -100px; font-family: 'paybooc-Medium';">as</div>
+    <div class="forFont" style="position: absolute; left: -100px; font-family: 'paybooc-Bold';">as</div>
+    <canvas id="canvasBackground" width="1920" height="1080"></canvas>
+    <canvas id="canvas" width="1920" height="1080"></canvas>
+    <canvas id="canvasPerson" width="1920" height="1080"></canvas>
 </body>
-<script src="./main.js"></script>
+<script id="mainScript" type="application/json">
+
+    {
+        "script" : [{
+            "backgroundPath" : "./lib/pastaRestaurantBG.png",
+            "text" : [
+                {"isChoice" : false, "who" : "나", "text" : "[내 이름은 아무무.]"}, 
+                {"isChoice" : false, "who" : "나", "text" : "[방구석에 틀어박혀 혼자 롤만하는 평범한 찐따다.]"}, 
+                {"isChoice" : false, "who" : "나", "text" : "[오늘은 어머니 친구분이 주선한 소개팅이 있는 날이다.]"}, 
+                {"isChoice" : false, "who" : "나", "text" : "[퇴짜 맞을게 뻔해 나오기 싫었지만 어머니 등살에 못이겨 집에서 나온 나는]"}, 
+                {"isChoice" : false, "who" : "나", "text" : "[지금 약속장소인 \"칼리스타 파스타\"에 도착했다.]"}, 
+                {"isChoice" : false, "who" : "나", "text" : "내가 먼저 온 건가?"}, 
+                {"isChoice" : false, "who" : "나", "text" : "[10분 뒤]"}, 
+                {"isChoice" : false, "who" : "나", "text" : "약속시간이 지났는데 아직도 안 오는거야? 벌렌데?"}, 
+                {"isChoice" : false, "who" : "나", "text" : "[그 순간 부드러운 목소리가 들려온다]"}, 
+                {"isChoice" : false, "who" : "클템", "text" : "늦어서 죄송합니다. 오래 기다리셨죠"}, 
+                {"isChoice" : true, "question" : "뭐라고 대답하면 좋을까?", "answer" : "1", 
+                    "choice" : ["약속시간에 늦다니... 쓰레기야!", "아니요, 저도 방금 왔어요 ㅎㅎ"],
+                    "reaction" : [
+                                    [
+                                        {"isChoice" : false, "who" : "클템", "text" : "[어머...호랑이처럼 매서운 매력이 있네]"}, 
+                                        {"isChoice" : false, "who" : "나", "text" : "[그녀는 내가 마음에 들었나 보다]"}
+                                    ], 
+                                    [   {"isChoice" : false, "who" : "클템", "text" : "[이거 뭐야? 완전 애송이구만]"}, 
+                                        {"isChoice" : false, "who" : "나", "text" : "[내가 찐따인걸 알아챈 모양이다 ㅠㅠ]"}
+                                    ]
+                                ]
+                },
+                {"isChoice" : false, "who" : "클템", "text" : "정말 죄송합니다"}, 
+                {"isChoice" : false, "who" : "나", "text" : "[그녀의 얼굴을 본 순간 나는 아무말도 할 수 없었다.]"}, 
+                {"isChoice" : false, "who" : "나", "text" : "[천사가 지상에 내려온다면 이런 모습일까?]"}, 
+                {"isChoice" : false, "who" : "나", "text" : "[지금 당장 심장이 터질것만 같다.]"}, 
+                {"isChoice" : false, "who" : "클템", "text" : "대신 밥은 제가 살께요 뭐 드시고 싶은거 있으세요?"}, 
+                {"isChoice" : false, "who" : "나", "text" : "[그녀가 건넨 메뉴판을 받아 들었다.]"}, 
+                {"isChoice" : true, "qustion" : "뭐라고 대답하면 좋을까?", "answer" : "2", "choice1" : "글쎄요...", "choice2" : "보자보자......보자기...?", "reaction1" : "[그녀에게 호랑이처럼 매서운 나의 매력을 어필했다.]", "reaction2" : "[애송이처럼 구는 나의 모습을 보여주고 말았다. ㅠㅠ]"},
+                {"isChoice" : false, "who" : "나", "text" : "qwqw"}, 
+                {"isChoice" : false, "who" : "클템", "text" : "이제 "}, 
+                {"isChoice" : false, "who" : "나", "text" : "qwqw"}, 
+                {"isChoice" : false, "who" : "클템", "text" : "qwqw"}
+            ]
+        }]
+    }
+
+</script>
+<script src="./main.js" type="text/javascript"></script>
 </html>
