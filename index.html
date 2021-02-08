@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
     <link rel="stylesheet" href="./style.css">
+    <meta http-equiv="Expires" content="Mon, 06 Jan 1990 00:00:01 GMT">
     <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
 </head>
 <body>
@@ -9,7 +10,12 @@
     <div class="forFont" style="position: absolute; left: -100px; font-family: 'paybooc-Bold';">as</div>
     <canvas id="canvasBackground" width="1920" height="1080"></canvas>
     <canvas id="canvas" width="1920" height="1080"></canvas>
-    <canvas id="canvasPerson" width="1920" height="1080"></canvas>
+    <canvas id="canvasP1" width="1920" height="1080"></canvas> <!--아무무만 나옴-->
+    <canvas id="canvasP2" width="1920" height="1080"></canvas> <!--클템포커스-->
+    <canvas id="canvasP3" width="1920" height="1080"></canvas> <!--웃는 클템반응-->
+    <canvas id="canvasP4" width="1920" height="1080"></canvas> <!--인상쓰는 클템 반응-->
+    <canvas id="canvasP5" width="1920" height="1080"></canvas> <!--둘다 아웃포커스 선택지-->
+    <canvas id="canvasP6" width="1920" height="1080"></canvas> <!--아무무포커스-->
 </body>
 <script id="mainScript" type="application/json">
 
@@ -27,15 +33,15 @@
                 {"isChoice" : false, "who" : "나", "text" : "약속시간이 지났는데 아직도 안 오는거야? 벌렌데?"}, 
                 {"isChoice" : false, "who" : "나", "text" : "[그 순간 부드러운 목소리가 들려온다]"}, 
                 {"isChoice" : false, "who" : "클템", "text" : "늦어서 죄송합니다. 오래 기다리셨죠"}, 
-                {"isChoice" : true, "question" : "뭐라고 대답하면 좋을까?", "answer" : "1", 
+                {"isChoice" : true, "question" : "뭐라고 대답하면 좋을까?", "answer" : "0", 
                     "choice" : ["약속시간에 늦다니... 쓰레기야!", "아니요, 저도 방금 왔어요 ㅎㅎ"],
                     "reaction" : [
                                     [
-                                        {"isChoice" : false, "who" : "클템", "text" : "[어머...호랑이처럼 매서운 매력이 있네]"}, 
-                                        {"isChoice" : false, "who" : "나", "text" : "[그녀는 내가 마음에 들었나 보다]"}
+                                        {"isChoice" : false, "who" : "클템", "text" : "[이거 뭐야? 쓰레기야]"}, 
+                                        {"isChoice" : false, "who" : "나", "text" : "[그녀는 내가 싫은가 보다]"}
                                     ], 
                                     [   {"isChoice" : false, "who" : "클템", "text" : "[이거 뭐야? 완전 애송이구만]"}, 
-                                        {"isChoice" : false, "who" : "나", "text" : "[내가 찐따인걸 알아챈 모양이다 ㅠㅠ]"}
+                                        {"isChoice" : false, "who" : "나", "text" : "[그녀는 내가 싫은가 보다]"}
                                     ]
                                 ]
                 },

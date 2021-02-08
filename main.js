@@ -3,8 +3,18 @@ const canvas = $("#canvas")[0];
 const ctx = canvas.getContext("2d");
 const canvasBG = $("#canvasBackground")[0];
 const ctxBG = canvasBG.getContext("2d");
-const canvasP = $("#canvasPerson")[0];
-const ctxP = canvasP.getContext("2d");
+const canvasP1 = $("#canvasP1")[0];
+const ctxP1 = canvasP1.getContext("2d");
+const canvasP2 = $("#canvasP2")[0];
+const ctxP2 = canvasP2.getContext("2d");
+const canvasP3 = $("#canvasP3")[0];
+const ctxP3 = canvasP3.getContext("2d");
+const canvasP4 = $("#canvasP4")[0];
+const ctxP4 = canvasP4.getContext("2d");
+const canvasP5 = $("#canvasP5")[0];
+const ctxP5 = canvasP5.getContext("2d");
+const canvasP6 = $("#canvasP6")[0];
+const ctxP6 = canvasP6.getContext("2d");
 //etc
 let nthOfPlace = 0; // json 장소 몇번째
 let nthOfText = 0; // json text 내에서의 몇번째
@@ -37,18 +47,29 @@ const choiceBox = "#F4FEC1";
 let doneChoice = false;
 let choiceNum = 0;
 let reactionNum = 0;
+//etc
+let mode = "";
+let answer = 2;
 
 window.onload = function () {
     const dummyDiv = $(".forFont");
     dummyDiv.hide();
     
 
-    let qw = script.script[0].text[0];
-    console.log(qw.who);
     
-   const start = setInterval(playGame, 1);
+    //인물미리 그려놓기
+    drawPerson();
 
-   //playGame();
+    $("#canvasP1").hide();
+    $("#canvasP2").hide();
+    $("#canvasP3").hide();
+    $("#canvasP4").hide();
+    $("#canvasP5").hide();
+    $("#canvasP6").hide();
+
+    const start = setInterval(playGame, 1);
+
+    //playGame();
 
 
 
@@ -60,8 +81,8 @@ function playGame() {
     ctx.clearRect(0, 0, 1920, 1080);
     //전체배경
     drawBackground();
-    //인물 출력
-    drawPerson();
+    //인물
+    showPerson();
     //글상자 배경
     drawTextboxBackground();
     //텍스트 출력
@@ -128,7 +149,6 @@ function drawText() {
     let result;
     if(scriptShortcut.isChoice) {
         //선택문일때
-        console.log("as");
         try {
             name = scriptShortcut.reaction[choiceNum][reactionNum].who;
             result = scriptShortcut.reaction[choiceNum][reactionNum].text.slice(0, num);
@@ -136,7 +156,7 @@ function drawText() {
                 length = scriptShortcut.reaction[choiceNum][reactionNum].text.length;
             }
         } catch (error) {
-            console.log(error);
+
         }
     }
     else {
@@ -148,7 +168,6 @@ function drawText() {
         }
     }
     
-        
     ctx.fillStyle = defaultStroke;
     ctx.font = textWhoSize + "pt 'paybooc-Bold'";
     ctx.fillText(name, textWhoStart[0], textWhoStart[1]);
@@ -160,15 +179,17 @@ function drawText() {
     }
     if(num != length) {
         if(scriptShortcut.isChoice) {
-            reactionNum+=1;
+            num+=1;
         }
-        num+=1;
+        else {
+            num+=1;
+        }
     }
 }
 
 
 //여기 논리를 싹다 고쳐야 할듯
-
+/*
 function drawPerson() {
 
     if(scriptShortcut.isChoice) {
@@ -242,13 +263,212 @@ function drawPerson() {
         whoIsBefore[1] = whoIsFocus[1];
     }
 }
+*/
 
-document.addEventListener("click", function () {
-    console.log("as");
-    console.log(nthOfText);
-    nthOfText+=1;
-    length = 0;
-    num = 1;
-    scriptShortcut = script.script[nthOfPlace].text[nthOfText]
-}, false);
-//클릭 리스너 만들기
+function drawPerson() {
+    const source = {
+        "img1" : "./lib/나.png",
+        "img2" : "./lib/클템.png",
+        "img3" : "./lib/smileRB.png",
+        "img4" : "./lib/badRB.png"
+    };
+    let image = {};
+    let i = 0;
+    for (let src in source) {
+        image[src] = new Image();
+        image[src].onload = function () {  
+            if (++i>=4) {
+                callback(image);
+            }
+        }
+        image[src].src = source[src];
+    }
+
+    function callback() {  
+        //아무무만 나옴
+        ctxP1.filter = "brightness(100%)";
+        ctxP1.drawImage(image.img1, 0, 0, 1920, 1273, 800, 190, 960, 636.5);
+        //클템포커스
+        ctxP2.filter = "none";
+        ctxP2.drawImage(image.img2, 0, 0, 1920, 1080, 78, 153, 1024, 576);
+        ctxP2.filter = "brightness(50%)";
+        ctxP2.drawImage(image.img1, 0, 0, 1920, 1273, 800, 190, 960, 636.5);
+        //웃는 클템반응
+        ctxP3.filter = "none";
+        ctxP3.drawImage(image.img3, 0, 0, 1920, 1080, 128, 243, 1024-160, 576-90);
+        ctxP3.filter = "brightness(50%)";
+        ctxP3.drawImage(image.img1, 0, 0, 1920, 1273, 800, 190, 960, 636.5);
+        //인상쓰는 클템 반응
+        ctxP4.filter = "none";
+        ctxP4.drawImage(image.img4, 0, 0, 1920, 1080, 28, 153, 1024, 576);
+        ctxP4.filter = "brightness(50%)";
+        ctxP4.drawImage(image.img1, 0, 0, 1920, 1273, 800, 190, 960, 636.5);
+        //둘다 아웃포커스
+        ctxP5.filter = "brightness(50%)";
+        ctxP5.drawImage(image.img2, 0, 0, 1920, 1080, 78, 153, 1024, 576);
+        ctxP5.filter = "brightness(50%)";
+        ctxP5.drawImage(image.img1, 0, 0, 1920, 1273, 800, 190, 960, 636.5);
+        //아무무 포커스
+        ctxP6.filter = "brightness(50%)";
+        ctxP6.drawImage(image.img2, 0, 0, 1920, 1080, 78, 153, 1024, 576);
+        ctxP6.filter = "brightness(100%)";
+        ctxP6.drawImage(image.img1, 0, 0, 1920, 1273, 800, 190, 960, 636.5);
+    }
+    
+}
+
+function showPerson() {
+    $("#canvasP1").hide();
+    $("#canvasP2").hide();
+    $("#canvasP3").hide();
+    $("#canvasP4").hide();
+    $("#canvasP5").hide();
+    $("#canvasP6").hide();
+
+    let nameBefore, nameAfter;
+
+
+    if(scriptShortcut.isChoice) {
+        //선택문일때
+        try {
+            if(reactionNum == 0) {
+                nameBefore = scriptShortcut.reaction[choiceNum][reactionNum].who;
+            }
+            else {
+                nameBefore = scriptShortcut.reaction[choiceNum][reactionNum-1].who;
+            }
+            nameAfter = scriptShortcut.reaction[choiceNum][reactionNum].who;
+        } catch (error) {
+            
+        }
+    }
+    else {
+        //선택문 아닐때
+        if(nthOfText == 0) {
+            nameBefore = "";
+        }
+        else {
+            nameBefore = script.script[nthOfPlace].text[nthOfText-1].who;
+        }
+        nameAfter = scriptShortcut.who;
+        if(nameBefore == undefined) {
+            if(nameAfter == "클템") {
+                nameBefore = "나";
+            }
+            else if(nameAfter == "나") {
+                nameBefore = "클템";
+            }
+        }
+    }
+
+    if(nameBefore == "" && nameAfter == "나" && isFirst) {
+        $("#canvasP1").show();
+    }
+    else if(nameBefore == "나" && nameAfter == "나" && isFirst) {
+        $("#canvasP1").show();
+    }
+    else if(nameBefore == "나" && nameAfter == "나") {
+        $("#canvasP6").show();
+    }
+    else if(nameBefore == "클템" && nameAfter == "나") {
+        $("#canvasP6").show();
+        isFirst = false;
+    }
+    else if(nameBefore == "나" && nameAfter == "클템") {
+        $("#canvasP2").show();
+    }
+    else if(nameAfter == "클템" && mode == "smile") {
+        $("#canvasP3").show();
+    }
+    else if(nameAfter == "클템" && mode == "bad") {
+        $("#canvasP4").show();
+    }
+    else if(!doneChoice && scriptShortcut.isChoice) {
+        $("#canvasP5").show();
+    }
+}
+
+$("body").mousemove(function (e) { 
+    e.preventDefault();
+
+    if(!doneChoice && scriptShortcut.isChoice) {
+        let rect = canvas.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+        
+        if(x >= 181.5 && x <= 778.5 && y >= 439 && y <= 472) {
+            //1번선택지
+            $("body").attr("style", "cursor: pointer;");
+        }
+        else if(x >= 181.5 && x <= 778.5 && y >= 482 && y <= 515) {
+            //2번 선택지
+            $("body").attr("style", "cursor: pointer;");
+        }
+        else {
+            $("body").attr("style", "");
+        }
+    }
+    else {
+        $("body").attr("style", "");
+    }
+});
+
+$("body").click(function (e) { 
+    e.preventDefault();
+
+    if(!doneChoice && scriptShortcut.isChoice) {
+        let rect = canvas.getBoundingClientRect();
+        let x = e.clientX - rect.left;
+        let y = e.clientY - rect.top;
+
+       
+        
+        if(x >= 181.5 && x <= 778.5 && y >= 439 && y <= 472) {
+            //1번선택지
+            if(scriptShortcut.answer == 0) {
+                mode = "smile";
+            }
+            else {
+                mode = "bad";
+            }
+            choiceNum = 0;
+            doneChoice = true;
+        }
+        else if(x >= 181.5 && x <= 778.5 && y >= 482 && y <= 515) {
+            //2번 선택지
+            if(scriptShortcut.answer == 1) {
+                mode = "smile";
+            }
+            else {
+                mode = "bad";
+            }
+            choiceNum = 1;
+            doneChoice = true;
+        }
+    }
+    else if(scriptShortcut.isChoice && doneChoice) {
+        try {
+            if(reactionNum >= scriptShortcut.reaction[choiceNum].length-1) {
+                nthOfText+=1;
+                length = 0;
+                num = 1;
+                scriptShortcut = script.script[nthOfPlace].text[nthOfText];
+                doneChoice = false;
+            }
+            else {
+                mode = "";
+                reactionNum+=1;
+                num = 1;
+            }
+        } catch (error) {
+            
+        }
+    }
+    else if(!scriptShortcut.isChoice){
+        nthOfText+=1;
+        length = 0;
+        num = 1;
+        scriptShortcut = script.script[nthOfPlace].text[nthOfText];
+    }
+});
+//마우스 좌표를 가져와서 버튼위치에 있으면 캔버스에 cursor: pointer;추가
